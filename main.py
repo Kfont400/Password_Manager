@@ -1,6 +1,7 @@
 def clear_output():
     website_entry.delete(0, END)
     password_entry.delete(0, END)
+    confirm.config(text='')
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 import random
@@ -19,8 +20,15 @@ def generate_password():
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save_info():
+    website = website_entry.get()
+    email = email_user_entry.get()
+    password = password_entry.get()
     with open('saved_passwords.txt', 'a') as f:
-        f.write(f'{website_entry.get()} | {email_user_entry.get()} | {password_entry.get()}\n')
+        f.write(f'{website} | {email} | {password}\n')
+        website_entry.delete(0, END)
+        password_entry.delete(0, END)
+        confirm.config(text='Saved!', font=('Arial',16,'bold'))
+
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -60,5 +68,7 @@ add_button.grid(column=1, row=4)
 clear_button = Button(text='Clear',width=10, command=clear_output )
 clear_button.grid(column=2, row=4)
 
+confirm = Label(text='')
+confirm.grid(column=1, row=6)
 
 window.mainloop()
