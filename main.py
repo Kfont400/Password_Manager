@@ -1,3 +1,8 @@
+from tkinter import *
+from tkinter import messagebox
+import pyperclip
+
+# ------------------------------- Clear Screen ---------------------------------- #
 def clear_output():
     website_entry.delete(0, END)
     password_entry.delete(0, END)
@@ -12,28 +17,34 @@ def generate_password():
     symbol = '!@#$%^&*+-/._-()[]{}'
 
     ans = lower + upper + numbers + symbol
-    length = 9
+    length = random.randint(8,12)
     password = "".join(random.sample(ans, length))
 
     password_entry.delete(0, END)
     password_entry.insert(0,password)
+    pyperclip.copy(password)
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save_info():
     website = website_entry.get()
     email = email_user_entry.get()
     password = password_entry.get()
-    with open('saved_passwords.txt', 'a') as f:
-        f.write(f'{website} | {email} | {password}\n')
-        website_entry.delete(0, END)
-        password_entry.delete(0, END)
-        confirm.config(text='Saved!', font=('Arial',16,'bold'))
 
+
+    if len(email) > 0 and len(website) > 0 and len(password) > 0:
+        is_ok = messagebox.askokcancel(title=website, message=f'Thees are the details entered: Email: {email}'
+                                                  f'\nPassword: {password} \nIs it ok to save?')
+        if is_ok:
+            with open('saved_passwords.txt', 'a') as f:
+                f.write(f'{website} | {email} | {password}\n')
+                website_entry.delete(0, END)
+                password_entry.delete(0, END)
+                confirm.config(text='Saved!', font=('Arial',16,'bold'))
+    else:
+        messagebox.showerror('Error', 'One or more boxes have not been filled')
 
 
 # ---------------------------- UI SETUP ------------------------------- #
-from tkinter import *
-
 window = Tk()
 window.title('Password Manager')
 window.config(padx=50, pady=50)
